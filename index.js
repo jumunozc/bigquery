@@ -5,7 +5,6 @@ var router = express.Router();
 router.get('/', async function (req, res) {
 
 
-    console.log("holaaaaa", req.query)
     const { BigQuery } = require('@google-cloud/bigquery');
     let salida;
     let salida2;
@@ -23,14 +22,14 @@ router.get('/', async function (req, res) {
 
         // The SQL query to run
         let sqlQuery = '';
-        sqlQuery = `SELECT * FROM conciliadortest.testDt.testRa
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa
         ${req.query.filter != undefined ? `where  ${req.query.filter.substring(0, req.query.filter.length - 4)} order by 
         ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}` :
                 `order by ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}`} `
 
         let consulta2 = '';
 
-        consulta2 = `SELECT count(*) FROM conciliadortest.testDt.testRa`
+        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa`
 
         const options = {
             query: sqlQuery,
