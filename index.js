@@ -49,7 +49,7 @@ router.get('/', async function (req, res) {
         salida2 = totalSql;
         return res.status(200).json({
             json: salida,
-            total: salida2
+            total: salida2[0]
         })
     }
 
