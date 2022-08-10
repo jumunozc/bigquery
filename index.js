@@ -39,12 +39,6 @@ router.get('/', async function (req, res) {
                             : `order by ${query.order} ${query.typeOrder} limit ${req.query.limit} offset ${query.page}`
             }`
 
-
-        // ${req.query.filter != undefined
-        //         ? `where  ${req.query.filter.substring(0, req.query.filter.length - 4)} order by 
-        //         ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}`
-        //         : `order by ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}`} `
-
         let consulta2 = '';
         console.log("quiery", sqlQuery)
         consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa`
