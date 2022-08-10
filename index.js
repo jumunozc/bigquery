@@ -8,8 +8,9 @@ router.get('/', async function (req, res) {
     const { BigQuery } = require('@google-cloud/bigquery');
     let salida;
     let salida2;
+    let query = req.query;
+    console.log("query entrada", query)
     async function Bigquery() {
-        // Queries a public Shakespeare dataset.
 
         // Create a client
         const bigqueryClient = new BigQuery({
@@ -23,12 +24,29 @@ router.get('/', async function (req, res) {
         // The SQL query to run
         let sqlQuery = '';
         sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa
-        ${req.query.filter != undefined ? `where  ${req.query.filter.substring(0, req.query.filter.length - 4)} order by 
-        ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}` :
-                `order by ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}`} `
+        ${query.filter != undefined && query.filterDate != undefined
+                ? `where ${Array.isArray(query.filter)
+                    ? `${query.filter[0]} ${query.filter[1]} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    : `${query.filter} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
+                : query.filterDate != undefined
+                    ? `where fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    : query.filter != undefined && Array.isArray(query.filter)
+                        ? `where ${query.filter[0]}  ${query.filter[1].substring(0, query.filter[1].length - 4)} order by 
+                        ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                        : query.filter != undefined && !Array.isArray(query.filter)
+                            ? `where  ${query.filter.substring(0, query.filter.length - 4)} order by 
+                                ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                            : `order by ${query.order} ${query.typeOrder} limit ${req.query.limit} offset ${query.page}`
+            }`
+
+
+        // ${req.query.filter != undefined
+        //         ? `where  ${req.query.filter.substring(0, req.query.filter.length - 4)} order by 
+        //         ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}`
+        //         : `order by ${req.query.order} ${req.query.typeOrder} limit ${req.query.limit} offset ${req.query.page}`} `
 
         let consulta2 = '';
-
+        console.log("quiery", sqlQuery)
         consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa`
 
         const options = {
