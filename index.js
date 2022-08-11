@@ -23,7 +23,7 @@ router.get('/', async function (req, res) {
 
         // The SQL query to run
         let sqlQuery = '';
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.Analitic_Soat.Decimas_SE
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.bigquery-public-data.austin_311.311_service_requests
         ${query.filter != undefined && query.filterDate != undefined
                 ? `where ${Array.isArray(query.filter)
                     ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
@@ -41,7 +41,7 @@ router.get('/', async function (req, res) {
 
         let consulta2 = '';
         console.log("quiery", sqlQuery)
-        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.Analitic_Soat.Decimas_SE`
+        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.bigquery-public-data.austin_311.311_service_requests`
 
         const options = {
             query: sqlQuery,
@@ -52,15 +52,15 @@ router.get('/', async function (req, res) {
             location: 'us-east1',
         };
 
-        // Run the query
-        const [rows] = await bigqueryClient.query(options);
-        const [totalSql] = await bigqueryClient.query(options2)
+        // // Run the query
+        // const [rows] = await bigqueryClient.query(options);
+        // const [totalSql] = await bigqueryClient.query(options2)
 
-        salida = rows
-        salida2 = totalSql;
+        // salida = rows
+        // salida2 = totalSql;
         return res.status(200).json({
             json: salida,
-            total: salida2[0]
+            //total: salida2[0]
         })
     }
 
