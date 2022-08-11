@@ -27,9 +27,15 @@ router.get('/', async function (req, res) {
         let paginadoFiltro = `order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`;
         switch (query != undefined) {
             case query.filter != undefined && query.filterDate != undefined:
-                concatenado = `where ${Array.isArray(query.filter)
-                    ? `${query.filter[0]} ${query.filter[1]} ${query.filterDate[0]} between TIMESTAMP('${query.filterDate[1]}') and TIMESTAMP('${query.filterDate[3]}')`
-                    : `${query.filter} ${query.filterDate[0]} between TIMESTAMP('${query.filterDate[1]}') and TIMESTAMP('${query.filterDate[3]}')`}`
+                if (Array.isArray(query.filter)) {
+                    let param = '';
+                    for (let index = 0; index < query.filter.length; index++) {
+                        param += query.filter[index];
+                    }
+                    concatenado = `where ${param} ${query.filterDate[0]} between TIMESTAMP('${query.filterDate[1]}') and TIMESTAMP('${query.filterDate[3]}')`
+                } else {
+                    concatenado = `where ${query.filter} ${query.filterDate[0]} between TIMESTAMP('${query.filterDate[1]}') and TIMESTAMP('${query.filterDate[3]}')`
+                }
                 break;
             case query.filterDate != undefined:
                 concatenado = `where ${query.filterDate[0]} between TIMESTAMP('${query.filterDate[1]}') and TIMESTAMP('${query.filterDate[3]}') `
@@ -46,7 +52,7 @@ router.get('/', async function (req, res) {
         console.log("query", sqlQuery)
         let consulta2 = '';
         consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource} ${concatenado != '' ? concatenado : ''}`
-        console.log("consulta2", consulta2)
+
         const options = {
             query: sqlQuery,
             location: 'US',
