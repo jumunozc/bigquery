@@ -10,7 +10,7 @@ var app = express();
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(cors())
-app.use('/', ocr)
+app.use('/test', ocr)
 
 const securePort = process.env.PORT || '5000'
 app.listen(securePort, () => {
