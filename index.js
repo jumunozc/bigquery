@@ -23,7 +23,7 @@ router.get('/', async function (req, res) {
 
         // The SQL query to run
         let sqlQuery = '';
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}..testRa
         ${query.filter != undefined && query.filterDate != undefined
                 ? `where ${Array.isArray(query.filter)
                     ? `${query.filter[0]} ${query.filter[1]} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
@@ -36,7 +36,7 @@ router.get('/', async function (req, res) {
                         : query.filter != undefined && !Array.isArray(query.filter)
                             ? `where  ${query.filter.substring(0, query.filter.length - 4)} order by 
                                 ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                            : `order by ${query.order} ${query.typeOrder} limit ${req.query.limit} offset ${query.page}`
+                            : `order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
             }`
 
         let consulta2 = '';
