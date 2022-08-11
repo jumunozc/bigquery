@@ -23,13 +23,13 @@ router.get('/', async function (req, res) {
 
         // The SQL query to run
         let sqlQuery = '';
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.Analitic_Soat.Decimas_SE
         ${query.filter != undefined && query.filterDate != undefined
                 ? `where ${Array.isArray(query.filter)
-                    ? `${query.filter[0]} ${query.filter[1]} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                    : `${query.filter} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
+                    ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    : `${query.filter} fechaExpedicion between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
                 : query.filterDate != undefined
-                    ? `where fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    ? `where fechaExpedicion between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
                     : query.filter != undefined && Array.isArray(query.filter)
                         ? `where ${query.filter[0]}  ${query.filter[1].substring(0, query.filter[1].length - 4)} order by 
                         ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
@@ -41,7 +41,7 @@ router.get('/', async function (req, res) {
 
         let consulta2 = '';
         console.log("quiery", sqlQuery)
-        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa`
+        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.Analitic_Soat.Decimas_SE`
 
         const options = {
             query: sqlQuery,
