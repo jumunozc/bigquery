@@ -23,7 +23,7 @@ router.get('/', async function (req, res) {
 
         // The SQL query to run
         let sqlQuery = '';
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}..testRa
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa
         ${query.filter != undefined && query.filterDate != undefined
                 ? `where ${Array.isArray(query.filter)
                     ? `${query.filter[0]} ${query.filter[1]} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
