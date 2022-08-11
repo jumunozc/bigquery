@@ -45,11 +45,11 @@ router.get('/', async function (req, res) {
 
         const options = {
             query: sqlQuery,
-            location: 'us-east1',
+            location: 'us-west1',
         };
         const options2 = {
             query: consulta2,
-            location: 'us-east1',
+            location: 'us-west1',
         };
 
         // Run the query
