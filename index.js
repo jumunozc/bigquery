@@ -23,13 +23,13 @@ router.get('/', async function (req, res) {
 
         // The SQL query to run
         let sqlQuery = '';
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.bigquery-public-data.austin_311.311_service_requests
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa
         ${query.filter != undefined && query.filterDate != undefined
                 ? `where ${Array.isArray(query.filter)
-                    ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                    : `${query.filter} fechaExpedicion between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
+                    ? `${query.filter[0]} ${query.filter[1]} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    : `${query.filter} fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
                 : query.filterDate != undefined
-                    ? `where fechaExpedicion between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    ? `where fecha between DATE('${query.filterDate[0]}') and DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
                     : query.filter != undefined && Array.isArray(query.filter)
                         ? `where ${query.filter[0]}  ${query.filter[1].substring(0, query.filter[1].length - 4)} order by 
                         ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
@@ -41,8 +41,8 @@ router.get('/', async function (req, res) {
 
         let consulta2 = '';
         console.log("quiery", sqlQuery)
-        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.bigquery-public-data.austin_311.311_service_requests`
-        
+        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa`
+
         const options = {
             query: sqlQuery,
             location: 'us-east1',
