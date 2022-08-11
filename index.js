@@ -52,15 +52,15 @@ router.get('/', async function (req, res) {
             location: 'us-east1',
         };
 
-        // // Run the query
-        // const [rows] = await bigqueryClient.query(options);
-        // const [totalSql] = await bigqueryClient.query(options2)
+        // Run the query
+        const [rows] = await bigqueryClient.query(options);
+        const [totalSql] = await bigqueryClient.query(options2)
 
-        // salida = rows
-        // salida2 = totalSql;
+        salida = rows
+        salida2 = totalSql;
         return res.status(200).json({
             json: salida,
-            //total: salida2[0]
+            total: salida2[0]
         })
     }
 
