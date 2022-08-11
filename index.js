@@ -26,10 +26,10 @@ router.get('/', async function (req, res) {
         sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource}
         ${query.filter != undefined && query.filterDate != undefined
                 ? `where ${Array.isArray(query.filter)
-                    ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion DATE('${query.filterDate[0]}') and fechaExpedicion DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                    : `${query.filter} fechaExpedicion DATE('${query.filterDate[0]}') and fechaExpedicion DATE('${query.filterDate[1]}')  order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
+                    ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    : `${query.filter} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
                 : query.filterDate != undefined
-                    ? `where fechaExpedicion DATE('${query.filterDate[0]}') and fechaExpedicion DATE('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+                    ? `where fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
                     : query.filter != undefined && Array.isArray(query.filter)
                         ? `where ${query.filter[0]}  ${query.filter[1].substring(0, query.filter[1].length - 4)} order by 
                         ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
