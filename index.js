@@ -23,26 +23,46 @@ router.get('/', async function (req, res) {
 
         // The SQL query to run
         let sqlQuery = '';
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource}
-        ${query.filter != undefined && query.filterDate != undefined
-                ? `where ${Array.isArray(query.filter)
-                    ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                    : `${query.filter} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
-                : query.filterDate != undefined
-                    ? `where fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                    : query.filter != undefined && Array.isArray(query.filter)
-                        ? `where ${query.filter[0]}  ${query.filter[1].substring(0, query.filter[1].length - 4)} order by 
-                        ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                        : query.filter != undefined && !Array.isArray(query.filter)
-                            ? `where  ${query.filter.substring(0, query.filter.length - 4)} order by 
-                                ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-                            : `order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
-            }`
+        let concatenado = '';
+        let paginadoFiltro = `order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`;
+        switch (query != undefined) {
+            case query.filter != undefined && query.filterDate != undefined:
+                concatenado = `where ${Array.isArray(query.filter)
+                    ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}')`
+                    : `${query.filter} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}')`}`
+                break;
+            case query.filterDate != undefined:
+                concatenado = `where fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') `
+                break;
+            case query.filter != undefined && Array.isArray(query.filter):
+                concatenado = `where  ${query.filter.substring(0, query.filter.length - 4)} `
+                break;
+            default:
+                concatenado = ``
+                break;
+        }
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource} ${concatenado} ${paginadoFiltro}`
 
+        // sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource}
+        // ${query.filter != undefined && query.filterDate != undefined
+        //         ? `where ${Array.isArray(query.filter)
+        //             ? `${query.filter[0]} ${query.filter[1]} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+        //             : `${query.filter} fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`}`
+        //         : query.filterDate != undefined
+        //             ? `where fechaExpedicion between TIMESTAMP('${query.filterDate[0]}') and TIMESTAMP('${query.filterDate[1]}') order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+        //             : query.filter != undefined && Array.isArray(query.filter)
+        //                 ? `where ${query.filter[0]}  ${query.filter[1].substring(0, query.filter[1].length - 4)} order by 
+        //                 ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+        //                 : query.filter != undefined && !Array.isArray(query.filter)
+        //                     ? `where  ${query.filter.substring(0, query.filter.length - 4)} order by 
+        //                         ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+        //                     : `order by ${query.order} ${query.typeOrder} limit ${query.limit} offset ${query.page}`
+        //     }`
+
+        console.log("query", sqlQuery)
         let consulta2 = '';
-        console.log("quiery", sqlQuery)
-        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource}`
-
+        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource} ${concatenado != '' ? concatenado : ''}`
+        console.log("consulta2", consulta2)
         const options = {
             query: sqlQuery,
             location: 'US',
@@ -52,7 +72,7 @@ router.get('/', async function (req, res) {
             location: 'US',
         };
 
-        // Run the query
+        //Run the query
         const [rows] = await bigqueryClient.query(options);
         const [totalSql] = await bigqueryClient.query(options2)
 
