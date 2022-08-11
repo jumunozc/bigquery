@@ -42,14 +42,14 @@ router.get('/', async function (req, res) {
         let consulta2 = '';
         console.log("quiery", sqlQuery)
         consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.Analitic_Soat.Decimas_SE`
-
+        
         const options = {
             query: sqlQuery,
-            location: 'us-west1',
+            location: 'us-east1',
         };
         const options2 = {
             query: consulta2,
-            location: 'us-west1',
+            location: 'us-east1',
         };
 
         // Run the query
