@@ -78,6 +78,58 @@ router.get('/', async function (req, res) {
 
 })
 
+router.get('/GET_MANY', async function (req, res) {
+
+
+    const { BigQuery } = require('@google-cloud/bigquery');
+    let salida;
+    let {filter} = req.query;
+    filter = JSON.parse(filter)
+    console.log("query entrada", filter)
+    async function Bigquery() {
+
+        // Create a client
+        const bigqueryClient = new BigQuery({
+            projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id,
+            credentials: {
+                client_email: GOOGLE_APPLICATION_CREDENTIALS.client_email,
+                private_key: GOOGLE_APPLICATION_CREDENTIALS.private_key,
+            },
+        });
+
+        // The SQL query to run
+        let sqlQuery = '';
+
+
+        let param = [];
+        for (let index = 0; index < filter.id.length; index++) {
+            console.log(filter.id[index])
+            param.push(`'${filter.id[index]}'`);
+        }
+        console.log("param", param)
+        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa WHERE user_id in (${param})`
+
+        console.log("query", sqlQuery)
+
+        const options = {
+            query: sqlQuery,
+            location: 'us-east1',
+        };
+
+
+        //Run the query
+        const [rows] = await bigqueryClient.query(options);
+
+        salida = rows
+        return res.status(200).json({
+            json: salida
+        })
+    }
+
+    Bigquery()
+
+})
+
 
 
 module.exports = router
