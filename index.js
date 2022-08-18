@@ -1,4 +1,3 @@
-const GOOGLE_APPLICATION_CREDENTIALS = require("./key.json");
 var express = require('express');
 var router = express.Router();
 require('dotenv').config();
@@ -66,14 +65,14 @@ router.get('/', async function (req, res) {
         };
 
         //Run the query
-        // const [rows] = await bigqueryClient.query(options);
-        // const [totalSql] = await bigqueryClient.query(options2)
+        const [rows] = await bigqueryClient.query(options);
+        const [totalSql] = await bigqueryClient.query(options2)
 
-        // salida = rows
-        // salida2 = totalSql;
+        salida = rows
+        salida2 = totalSql;
         return res.status(200).json({
             json: salida,
-            //total: salida2[0]
+            total: salida2[0]
         })
     }
 
