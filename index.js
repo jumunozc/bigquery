@@ -1,6 +1,7 @@
 const GOOGLE_APPLICATION_CREDENTIALS = require("./key.json");
 var express = require('express');
 var router = express.Router();
+require('dotenv').config();
 
 router.get('/', async function (req, res) {
 
@@ -13,13 +14,15 @@ router.get('/', async function (req, res) {
     async function Bigquery() {
 
         // Create a client
-        const bigqueryClient = new BigQuery({
-            projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id,
-            credentials: {
-                client_email: GOOGLE_APPLICATION_CREDENTIALS.client_email,
-                private_key: GOOGLE_APPLICATION_CREDENTIALS.private_key,
-            },
-        });
+        const bigqueryClient = new BigQuery(
+            {
+                projectId: process.env.projectId,
+                credentials: {
+                    client_email: process.env.client_email,
+                    private_key: process.env.private_key,
+                },
+            }
+        );
 
         // The SQL query to run
         let sqlQuery = '';
@@ -47,11 +50,11 @@ router.get('/', async function (req, res) {
                 concatenado = ``
                 break;
         }
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource} ${concatenado} ${paginadoFiltro}`
+        sqlQuery = `SELECT * FROM ${process.env.projectId}.${query.dataset}.${query.resource} ${concatenado} ${paginadoFiltro}`
 
         console.log("query", sqlQuery)
         let consulta2 = '';
-        consulta2 = `SELECT count(*) FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.${query.dataset}.${query.resource} ${concatenado != '' ? concatenado : ''}`
+        consulta2 = `SELECT count(*) FROM ${process.env.projectId}.${query.dataset}.${query.resource} ${concatenado != '' ? concatenado : ''}`
 
         const options = {
             query: sqlQuery,
@@ -63,14 +66,14 @@ router.get('/', async function (req, res) {
         };
 
         //Run the query
-        const [rows] = await bigqueryClient.query(options);
-        const [totalSql] = await bigqueryClient.query(options2)
+        // const [rows] = await bigqueryClient.query(options);
+        // const [totalSql] = await bigqueryClient.query(options2)
 
-        salida = rows
-        salida2 = totalSql;
+        // salida = rows
+        // salida2 = totalSql;
         return res.status(200).json({
             json: salida,
-            total: salida2[0]
+            //total: salida2[0]
         })
     }
 
@@ -83,19 +86,21 @@ router.get('/GET_MANY', async function (req, res) {
 
     const { BigQuery } = require('@google-cloud/bigquery');
     let salida;
-    let {filter} = req.query;
+    let { filter } = req.query;
     filter = JSON.parse(filter)
     console.log("query entrada", filter)
     async function Bigquery() {
 
         // Create a client
-        const bigqueryClient = new BigQuery({
-            projectId: GOOGLE_APPLICATION_CREDENTIALS.project_id,
-            credentials: {
-                client_email: GOOGLE_APPLICATION_CREDENTIALS.client_email,
-                private_key: GOOGLE_APPLICATION_CREDENTIALS.private_key,
-            },
-        });
+        const bigqueryClient = new BigQuery(
+            {
+                projectId: process.env.projectId,
+                credentials: {
+                    client_email: process.env.client_email,
+                    private_key: process.env.private_key,
+                },
+            }
+        );
 
         // The SQL query to run
         let sqlQuery = '';
@@ -107,7 +112,7 @@ router.get('/GET_MANY', async function (req, res) {
             param.push(`'${filter.id[index]}'`);
         }
         console.log("param", param)
-        sqlQuery = `SELECT * FROM ${GOOGLE_APPLICATION_CREDENTIALS.project_id}.testDt.testRa WHERE user_id in (${param})`
+        sqlQuery = `SELECT * FROM ${process.env.projectId}.testDt.testRa WHERE user_id in (${param})`
 
         console.log("query", sqlQuery)
 

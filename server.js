@@ -13,7 +13,7 @@ app.use(cors())
 app.use('/', ocr)
 app.use('/GET_MANY', ocr)
 
-const securePort = process.env.PORT || '5000'
+const securePort = process.env.PORT || '6000'
 app.listen(securePort, () => {
     console.log(`La api está escuchando en el puerto ${securePort}`)
 })
